@@ -1,3 +1,7 @@
-import math
+import time
 
-print(math.e)
+def choco():
+  time.sleep(3)
+  print("Hello World!")
+  
+choco();

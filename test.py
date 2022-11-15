@@ -1,7 +1,7 @@
-import time
+from drug_data import DrugData
 
-def choco():
-  time.sleep(3)
-  print("Hello World!")
-  
-choco();
+dt = DrugData()
+
+data = dt.getDrugIngrNameKor('타이레놀콜드-에스정')
+for i in data:
+  print(i)

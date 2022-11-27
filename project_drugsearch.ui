@@ -242,19 +242,38 @@
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="tabDangerInfo">
+        <widget class="QWidget" name="tabDrugList">
          <attribute name="title">
-          <string>위험 정보</string>
+          <string>약물 리스트</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout_9">
+          <item row="0" column="2">
+           <layout class="QGridLayout" name="gridLayout_3"/>
+          </item>
           <item row="0" column="0">
-           <layout class="QGridLayout" name="gridLayout_8"/>
+           <layout class="QGridLayout" name="gridLayout_6"/>
+          </item>
+          <item row="0" column="1">
+           <spacer name="horizontalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="tab_3">
+        <widget class="QWidget" name="tabMoreInfo">
          <attribute name="title">
-          <string>상세정보</string>
+          <string>더보기</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout_4">
           <item row="0" column="0">

@@ -29,3 +29,20 @@ class DrugData:
         
     ingrsList = ingrs.split('///')
     return ingrsList
+  
+  # 선택된 약물을 데이터베이스에 저장
+  def saveDrugDB(self, drugInfo):
+    import pandas as pd
+    try:
+      db = pd.read_csv('db.csv')
+    except:
+      pd.DataFrame(data=drugInfo)
+  
+  # 데이터베이스에서 복용 약물 리스트 return
+  def readDrugDB(self):
+    import pandas as pd
+    try:
+      db = pd.read_csv('db.csv')
+      return db
+    except:
+      pass

@@ -19,8 +19,13 @@
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0">
        <widget class="QTabWidget" name="tabWidget">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
         <property name="currentIndex">
-         <number>2</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="tabDrugRegister">
          <attribute name="title">
@@ -51,7 +56,7 @@
               </property>
               <property name="font">
                <font>
-                <pointsize>11</pointsize>
+                <pointsize>10</pointsize>
                </font>
               </property>
               <property name="title">
@@ -181,6 +186,11 @@
                 <height>0</height>
                </size>
               </property>
+              <property name="font">
+               <font>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
               <property name="title">
                <string>약물 리스트</string>
               </property>
@@ -295,6 +305,11 @@
              <layout class="QVBoxLayout" name="verticalLayout">
               <item>
                <widget class="QGroupBox" name="groupBox_5">
+                <property name="font">
+                 <font>
+                  <pointsize>10</pointsize>
+                 </font>
+                </property>
                 <property name="title">
                  <string>약물 상세 정보</string>
                 </property>
@@ -305,8 +320,8 @@
                     <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.AppleSystemUIFont'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Gulim'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'.AppleSystemUIFont'; font-size:13pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                    </property>
                   </widget>
                  </item>
@@ -328,6 +343,11 @@ p, li { white-space: pre-wrap; }
                 <width>0</width>
                 <height>200</height>
                </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>10</pointsize>
+               </font>
               </property>
               <property name="title">
                <string>위험 정보</string>
@@ -362,6 +382,11 @@ p, li { white-space: pre-wrap; }
            <layout class="QGridLayout" name="gridLayout_6">
             <item row="0" column="0">
              <widget class="QGroupBox" name="groupBox_3">
+              <property name="font">
+               <font>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
               <property name="title">
                <string>약물 리스트</string>
               </property>
@@ -417,6 +442,11 @@ p, li { white-space: pre-wrap; }
                      <height>30</height>
                     </size>
                    </property>
+                   <property name="font">
+                    <font>
+                     <pointsize>10</pointsize>
+                    </font>
+                   </property>
                    <property name="text">
                     <string>선택 약물 삭제</string>
                    </property>
@@ -451,6 +481,11 @@ p, li { white-space: pre-wrap; }
                      <width>170</width>
                      <height>30</height>
                     </size>
+                   </property>
+                   <property name="font">
+                    <font>
+                     <pointsize>10</pointsize>
+                    </font>
                    </property>
                    <property name="text">
                     <string>새로고침</string>
@@ -487,10 +522,15 @@ p, li { white-space: pre-wrap; }
           <string>설정</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout_4">
-          <item row="1" column="1">
+          <item row="2" column="1">
            <layout class="QGridLayout" name="gridLayout_10">
             <item row="0" column="0">
              <widget class="QGroupBox" name="groupBox_6">
+              <property name="font">
+               <font>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
               <property name="title">
                <string>제장 정보</string>
               </property>
@@ -502,12 +542,33 @@ p, li { white-space: pre-wrap; }
            <layout class="QGridLayout" name="gridLayout_12">
             <item row="0" column="0">
              <widget class="QGroupBox" name="groupBox_7">
+              <property name="font">
+               <font>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
               <property name="title">
                <string>정보 설정</string>
               </property>
              </widget>
             </item>
            </layout>
+          </item>
+          <item row="1" column="1">
+           <spacer name="verticalSpacer_7">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
           </item>
          </layout>
         </widget>

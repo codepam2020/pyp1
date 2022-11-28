@@ -1,6 +1,6 @@
+import pandas as pd
 class DrugData:
-  import pandas as pd
-  df = pd.read_csv('C:/Users/alsue/Programming/Custum Program/pyp1/productIngrName.csv')
+  df = pd.read_csv('./productIngrName.csv')
 
   # 입력받은 약물이름을 csv파일 속 데이터에서 찾은 후 return
   def getDrugName(self, drugName):
@@ -34,17 +34,19 @@ class DrugData:
   
   # 선택된 약물을 데이터베이스에 저장
   def saveDrugDB(self, drugInfo):
-    import pandas as pd
     try:
-      db = pd.read_csv('db.csv')
+      db = pd.read_csv('db.csv', index_col=0)
+      db = db.append(drugInfo, ignore_index=True)
+      db.to_csv('db.csv')
     except:
-      drugInfo.to_csv('db.csv')
+      db = drugInfo
+      db.to_csv('db.csv')
   
   # 데이터베이스에서 복용 약물 리스트 return
   def readDrugDB(self):
-    import pandas as pd
     try:
-      db = pd.read_csv('db.csv')
+      db = pd.read_csv('db.csv', index_col=0)
       return db
     except:
       pass
+    

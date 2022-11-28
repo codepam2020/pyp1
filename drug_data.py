@@ -38,7 +38,7 @@ class DrugData:
     try:
       db = pd.read_csv('db.csv')
     except:
-      pd.DataFrame(data=drugInfo)
+      drugInfo.to_csv('db.csv')
   
   # 데이터베이스에서 복용 약물 리스트 return
   def readDrugDB(self):

@@ -1,6 +1,6 @@
 class DrugData:
   import pandas as pd
-  df = pd.read_csv('/Users/yookjs/Programming/Custom_Program/pyp1/productIngrName.csv')
+  df = pd.read_csv('C:/Users/alsue/Programming/Custum Program/pyp1/productIngrName.csv')
 
   # 입력받은 약물이름을 csv파일 속 데이터에서 찾은 후 return
   def getDrugName(self, drugName):
@@ -16,7 +16,8 @@ class DrugData:
     for i in range(len(self.df)):
       if drugName == self.df['name'][i]:
         ingrs = self.df['ingrCode'][i]
-        
+        break
+      
     ingrsList = ingrs.split('///')
     return ingrsList
   
@@ -26,7 +27,8 @@ class DrugData:
     for i in range(len(self.df)):
       if drugName == self.df['name'][i]:
         ingrs = self.df['ingrNameKor'][i]
-        
+        break
+      
     ingrsList = ingrs.split('///')
     return ingrsList
   

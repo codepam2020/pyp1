@@ -54,6 +54,10 @@ class DrugData:
     except:
       pass
     
+  # 데이터베이스에 db파일 덮어쓰기(선택 약물 삭제용)
+  def editDrugDB(self, newDB):
+    newDB.to_csv('db.csv')
+    
     
   # 병용금기 약물 검색 및 return
   def getMixCautionDrug(self, ingrNameKor):
@@ -165,49 +169,44 @@ class DrugData:
     return json.loads(content)['body']['items']
   
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-    
-  # 주성분명으로 노인 주의 약물 검색 및 return
-  def searchCautionDrug(self, type, ingrNameKor):
+  # 투여기간 주의 약물 검색 및 return
+  def getDayCautionDrug(self, ingrNameKor):
     import requests
     import json
     
-    if type == 'elder':
-      typeCode = 'OdsnAtent'
-      
-    elif type == 'pragnant':
-      typeCode = 'PwnmTaboo'
-
-    elif type == 'specificAge':
-      typeCode = 'SpcifyAgrdeTaboo'
-
-    elif type == 'mix':
-      typeCode = 'UsjntTaboo'
-
-    elif type == 'day':
-      typeCode = 'MdctnPdAtent'
-    
-    typeCode = type
     ingrNameKorShorten = ingrNameKor[:4]
     
-    url = f'http://apis.data.go.kr/1471000/DURIrdntInfoService02/get{typeCode}InfoList01?'
+    url = 'http://apis.data.go.kr/1471000/DURIrdntInfoService02/getMdctnPdAtentInfoList01?'
+    
     params = {
       'serviceKey': '4ARJOwbLh8jufyYInZFDNEp0phIdsR0d7ZZP0bqJKwTfQ3cL+Df7zJWkSnYAk+8+jCjn/V9RLSxZ2vNFQ+YHrQ==',
       'pageNo': '1',
+      'type': 'json',
       'numOfRows': '100',
       'ingrKorName': ingrNameKorShorten
       }
     
-    res = requests.get(url, params=params)
+    response = requests.get(url=url, params=params)
+    content = response.text
+    return json.loads(content)['body']['items']
+  
+  
+  # 약 상세정보 return
+  def getDetailedDrugInfo(self, name):
+    import requests
+    import json
+    
+    url = 'http://apis.data.go.kr/1471000/DrbEasyDrugInfoService/getDrbEasyDrugList'
+    params = {
+      'serviceKey': '4ARJOwbLh8jufyYInZFDNEp0phIdsR0d7ZZP0bqJKwTfQ3cL+Df7zJWkSnYAk+8+jCjn/V9RLSxZ2vNFQ+YHrQ==',
+      'type':'json',
+      'pageNo': '1',
+      'numOfRows':'50',
+      'itemName': name
+      }
+    
+    response = requests.get(url=url, params=params)
+    content = response.text
+    
+    return json.loads(content)['body']['items']
+    

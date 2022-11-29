@@ -7,9 +7,12 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+import pandas as pd
 from drug_data import DrugData
 
 drugData = DrugData()
+searchDrugList = []
+detailedDrugName = 'none'
 
 
 
@@ -447,6 +450,18 @@ class Ui_MainWindow(object):
         self.tabWidget.setCurrentIndex(2)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         
+        #! 클릭 이벤트들
+        
+        # 검색 버튼
+        self.buttonSearchDrug.clicked.connect(self.clickDrugSearchButton)
+        # 등록 버튼 클릭
+        self.buttonSelectedDrugRegister.clicked.connect(self.clickDrugRegisterButton)
+        # 리스트 아이템 약물 더블클릭
+        self.listWidgetDbDrugList.itemDoubleClicked.connect(self.clickDoubleDrugListItem)
+        # 새로고침 버튼 클릭
+        self.buttonRenew.clicked.connect(self.clickRenewButton)
+        # 선택 약물 삭제 버튼
+        self.buttonSelectedDrugDelete.clicked.connect(self.clickDeleteSelectedDrug)
 
 
 
@@ -472,7 +487,7 @@ class Ui_MainWindow(object):
           'depositMethodQesitm':''
         }]
         try:
-          detailedInfo = drugData.getDetailedDrugInfo('아세트아미노펜')
+          detailedInfo = drugData.getDetailedDrugInfo(self.listWidgetDbDrugList.selectedItems()[0].text())
         except:
           pass
         self.textDrugDetailedInfo.setHtml(_translate("MainWindow", f"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
@@ -520,6 +535,93 @@ f"{detailedInfo[0]['depositMethodQesitm']} <br />"
         self.radioDayFalse.setText(_translate("MainWindow", "표시 안함"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabSetting), _translate("MainWindow", "설정"))
         
+    # 첫 화면 검색 버튼 클릭
+    def clickDrugSearchButton(self):
+      drugName = self.TextEditDrugSearch.toPlainText()
+      if drugName == '':
+        pass
+      else:
+        try:
+          searchedDrugList = drugData.getDrugName(drugName)
+        except:
+          pass
+      
+      self.ListWidgetDrugList.clear()
+      self.ListWidgetDrugList.addItems(searchedDrugList)
+      
+    # 첫 화면 약물 등록 버튼 클릭
+    def clickDrugRegisterButton(self):
+      try:
+        drugName = self.ListWidgetDrugList.selectedItems()[0].text()
+        ingrCode = drugData.getDrugIngrCode(drugName)
+        ingrNameKor = drugData.getDrugIngrNameKor(drugName)
+        drugInfo = pd.DataFrame({'name': drugName, 'ingrCode':[ingrCode], 'ingrNameKor': [ingrNameKor]})
+        drugData.saveDrugDB(drugInfo)
+        
+        db = drugData.readDrugDB()
+        self.listWidgetDbDrugList.addItems(list(db['name']))
+      except:
+        pass
+      
+      
+    # 두번재 화면 약물 리스트 더블 클릭
+    def clickDoubleDrugListItem(self):
+      _translate = QtCore.QCoreApplication.translate
+      try:
+          name = self.listWidgetDbDrugList.selectedItems()[0].text()
+          for i in range(3, len(name)):
+            try:
+              detailedInfo = drugData.getDetailedDrugInfo(name[:i])
+            except:
+              pass
+          self.textDrugDetailedInfo.setHtml(_translate("MainWindow", f"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'.AppleSystemUIFont\'; font-size:10pt; font-weight:400; font-style:normal;\">\n" 
+
+"<h4>제품명</h4>"
+f"{detailedInfo[0]['itemName']} <br />"
+'<h4>약의 효능</h4>'
+f"{detailedInfo[0]['efcyQesitm']} <br />"
+'<h4>약 사용 방법</h4>'
+f"{detailedInfo[0]['useMethodQesitm']} <br />"
+'<h4>약 사용전 알아야 될 내용</h4>'
+f"{detailedInfo[0]['atpnWarnQesitm']} <br />"
+'<h4>약 복용 및 사용시 주의사항</h4>'
+f"{detailedInfo[0]['atpnQesitm']} <br />"
+'<h4>약 복용 및 사용시 주의해야 할 약 또는 음식</h4>'
+f"{detailedInfo[0]['intrcQesitm']} <br />"
+'<h4>약 복용 및 사용시 나타날 수 있는 이상반응</h4>'
+f"{detailedInfo[0]['seQesitm']} <br />"
+'<h4>약 보관방법</h4>'
+f"{detailedInfo[0]['depositMethodQesitm']} <br />"
+
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;\"><br /></p></body></html>"))
+      except:
+        pass
+      
+    # 두번재 화면 새로고침 버튼 클릭
+    def clickRenewButton(self):
+      try:
+        self.listWidgetDbDrugList.clear()
+        db = drugData.readDrugDB()
+        self.listWidgetDbDrugList.addItems(list(db['name']))
+
+      except:
+        pass
+      
+    # 선택 약물 삭제 버튼 클릭
+    def clickDeleteSelectedDrug(self):
+      try:
+        db = drugData.readDrugDB()
+        delIndex = self.listWidgetDbDrugList.selectedIndexes()[0].row()
+        newDB = db.drop(delIndex)
+        newDB = newDB.reset_index(drop=True)
+        self.listWidgetDbDrugList.clear()
+        self.listWidgetDbDrugList.addItems(list(newDB['name']))
+        newDB.to_csv('db.csv')
+      except:
+        pass
 
 
 

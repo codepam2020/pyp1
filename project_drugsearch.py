@@ -9,10 +9,14 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import pandas as pd
 from drug_data import DrugData
+import xml.etree.ElementTree as ET
 
 drugData = DrugData()
 searchDrugList = []
 detailedDrugName = 'none'
+efficacy = []
+muchDay = []
+caution = []
 
 
 
@@ -476,16 +480,7 @@ class Ui_MainWindow(object):
         self.groupBox_4.setTitle(_translate("MainWindow", "위험 정보"))
         self.groupBox_5.setTitle(_translate("MainWindow", "약물 상세 정보"))
         
-        detailedInfo = [{
-          'itemName':'', 
-          'efcyQesitm':'',
-          'useMethodQesitm':'',
-          'atpnWarnQesitm':'',
-          'atpnQesitm':'',
-          'intrcQesitm':'',
-          'seQesitm':'',
-          'depositMethodQesitm':''
-        }]
+
         try:
           detailedInfo = drugData.getDetailedDrugInfo(self.listWidgetDbDrugList.selectedItems()[0].text())
         except:
@@ -495,22 +490,24 @@ class Ui_MainWindow(object):
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'.AppleSystemUIFont\'; font-size:10pt; font-weight:400; font-style:normal;\">\n" 
 
+"<DOC title=\"효능효과\" type=\"EE\">\r\n  <SECTION title=\"\">\r\n    <ARTICLE title=\"1. 주효능·효과\">\r\n      <PARAGRAPH tagName=\"p\" textIndent=\"0\" marginLeft=\"0\"><![CDATA[감기로 인한 발열 및 동통(통증), 두통, 신경통, 근육통, 월경통, 염좌통(삔 통증)]]></PARAGRAPH>\r\n    </ARTICLE>\r\n    <ARTICLE title=\"2. 다음 질환에도 사용할 수 있다.\">\r\n      <PARAGRAPH tagName=\"p\" textIndent=\"0\" marginLeft=\"0\"><![CDATA[치통, 관절통, 류마티양 동통(통증)]]></PARAGRAPH>\r\n    </ARTICLE>\r\n  </SECTION>\r\n</DOC>"
+
 "<h4>제품명</h4>"
-f"{detailedInfo[0]['itemName']} <br />"
+"<br />"
+'<h4>제조사</h4>'
+"<br />"
+'<h4>허가 날자</h4>'
+"<br />"
 '<h4>약의 효능</h4>'
-f"{detailedInfo[0]['efcyQesitm']} <br />"
-'<h4>약 사용 방법</h4>'
-f"{detailedInfo[0]['useMethodQesitm']} <br />"
-'<h4>약 사용전 알아야 될 내용</h4>'
-f"{detailedInfo[0]['atpnWarnQesitm']} <br />"
+"<br />"
 '<h4>약 복용 및 사용시 주의사항</h4>'
-f"{detailedInfo[0]['atpnQesitm']} <br />"
+"<br />"
 '<h4>약 복용 및 사용시 주의해야 할 약 또는 음식</h4>'
-f"{detailedInfo[0]['intrcQesitm']} <br />"
+"<br />"
 '<h4>약 복용 및 사용시 나타날 수 있는 이상반응</h4>'
-f"{detailedInfo[0]['seQesitm']} <br />"
+"<br />"
 '<h4>약 보관방법</h4>'
-f"{detailedInfo[0]['depositMethodQesitm']} <br />"
+"<br />"
 
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;\"><br /></p></body></html>"))
         self.groupBox_3.setTitle(_translate("MainWindow", "약물 리스트"))
@@ -534,6 +531,7 @@ f"{detailedInfo[0]['depositMethodQesitm']} <br />"
         self.radioDayTrue.setText(_translate("MainWindow", "표시함"))
         self.radioDayFalse.setText(_translate("MainWindow", "표시 안함"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabSetting), _translate("MainWindow", "설정"))
+        
         
     # 첫 화면 검색 버튼 클릭
     def clickDrugSearchButton(self):
@@ -567,38 +565,72 @@ f"{detailedInfo[0]['depositMethodQesitm']} <br />"
     # 두번재 화면 약물 리스트 더블 클릭
     def clickDoubleDrugListItem(self):
       _translate = QtCore.QCoreApplication.translate
+      
       try:
           name = self.listWidgetDbDrugList.selectedItems()[0].text()
-          for i in range(3, len(name)):
+          for i in reversed(range(len(name)-3, len(name))):
             try:
               detailedInfo = drugData.getDetailedDrugInfo(name[:i])
+              break
             except:
-              pass
+              print('erreor is occured')
+              
+          # 효능
+          sectionEfficacy = detailedInfo.find('EE_DOC_DATA').find('DOC').find('SECTION')
+          efficacy = []
+          for tag in sectionEfficacy:
+            efficacy.append(tag.get('title'))
+            for i in tag:
+              efficacy.append('   ' + i.text)
+          efficacyString = '\n'.join(efficacy)
+          
+          # 용법 용량
+          sectionMuchDay = detailedInfo.find('UD_DOC_DATA').find('DOC').find('SECTION')
+          muchDay = []
+          for tag in sectionMuchDay:
+            muchDay.append(tag.get('title'))
+            for i in tag:
+              muchDay.append('   ' + i.text)
+          muchDayString = '\n'.join(muchDay)
+          
+          # 주의사항
+          sectionCaution = detailedInfo.find('UD_DOC_DATA').find('DOC').find('SECTION')
+          caution = []
+          for tag in sectionCaution:
+            caution.append(tag.get('title'))
+            for i in tag:
+              caution.append('   ' + i.text)
+          cautionString = '\n'.join(caution)
+          
           self.textDrugDetailedInfo.setHtml(_translate("MainWindow", f"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'.AppleSystemUIFont\'; font-size:10pt; font-weight:400; font-style:normal;\">\n" 
 
+
 "<h4>제품명</h4>"
-f"{detailedInfo[0]['itemName']} <br />"
+f"{detailedInfo.find('ITEM_NAME').text} <br />"
+"<h4>제조사</h4>"
+f"{detailedInfo.find('ENTP_NAME').text} <br />"
+'<h4>주성분</h4>'
+f"{detailedInfo.find('MAIN_ITEM_INGR').text} <br />"
+'<h4>성분</h4>'
+f"{detailedInfo.find('INGR_NAME').text} <br />"
+'<h4>유효기간</h4>'
+f"{detailedInfo.find('VALID_TERM').text} <br />"
 '<h4>약의 효능</h4>'
-f"{detailedInfo[0]['efcyQesitm']} <br />"
-'<h4>약 사용 방법</h4>'
-f"{detailedInfo[0]['useMethodQesitm']} <br />"
-'<h4>약 사용전 알아야 될 내용</h4>'
-f"{detailedInfo[0]['atpnWarnQesitm']} <br />"
+f"{efficacyString} <br />"
+'<h4>용법 용량</h4>'
+f"{muchDayString} <br />"
 '<h4>약 복용 및 사용시 주의사항</h4>'
-f"{detailedInfo[0]['atpnQesitm']} <br />"
-'<h4>약 복용 및 사용시 주의해야 할 약 또는 음식</h4>'
-f"{detailedInfo[0]['intrcQesitm']} <br />"
-'<h4>약 복용 및 사용시 나타날 수 있는 이상반응</h4>'
-f"{detailedInfo[0]['seQesitm']} <br />"
-'<h4>약 보관방법</h4>'
-f"{detailedInfo[0]['depositMethodQesitm']} <br />"
+f"{cautionString} <br />"
+"<h4>허가날짜</h4>"
+f"{detailedInfo.find('ITEM_PERMIT_DATE').text} <br />"
+
 
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;\"><br /></p></body></html>"))
       except:
-        pass
+        print('err')
       
     # 두번재 화면 새로고침 버튼 클릭
     def clickRenewButton(self):

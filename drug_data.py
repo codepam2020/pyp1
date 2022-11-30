@@ -194,19 +194,19 @@ class DrugData:
   # 약 상세정보 return
   def getDetailedDrugInfo(self, name):
     import requests
-    import json
+    import xml.etree.ElementTree as ET
     
-    url = 'http://apis.data.go.kr/1471000/DrbEasyDrugInfoService/getDrbEasyDrugList'
+    url = 'http://apis.data.go.kr/1471000/DrugPrdtPrmsnInfoService02/getDrugPrdtPrmsnDtlInq01'
     params = {
       'serviceKey': '4ARJOwbLh8jufyYInZFDNEp0phIdsR0d7ZZP0bqJKwTfQ3cL+Df7zJWkSnYAk+8+jCjn/V9RLSxZ2vNFQ+YHrQ==',
-      'type':'json',
+      'type':'xml',
       'pageNo': '1',
       'numOfRows':'50',
-      'itemName': name
+      'item_name': name,
       }
     
     response = requests.get(url=url, params=params)
     content = response.text
-    
-    return json.loads(content)['body']['items']
-    
+    root = ET.fromstring(content)
+
+    return root[1][3][0]
